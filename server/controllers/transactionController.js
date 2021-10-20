@@ -45,8 +45,8 @@ transactionController.getTransaction = (req, res, next) => {
 
 //MIDDLEWARE FOR DELETING A TRANSACTION
 transactionController.deleteTransaction = (req, res, next) => {
-    const deleteQuery = `DELETE FROM transactions WHERE transaction_id=${req.body.id}`;
-
+    const deleteQuery = `DELETE FROM transactions WHERE _id=${req.body.id}`;
+    // console.log(req.body.id)
     //receive transaction_id from the request on req.body.id
     
     db.query(deleteQuery)
@@ -67,7 +67,7 @@ transactionController.getTotal = (req, res, next) => {
     let total = 0;
         
     transactions.forEach( obj => {
-        total += obj.amount;
+        total += Number(obj.amount);
         
     })
 

@@ -1,18 +1,7 @@
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
-CREATE TABLE public.transactions (
+CREATE TABLE transactions (
 	"_id" serial NOT NULL,
 	"name" varchar NOT NULL,
-	"amount" DECIMAL(19, 2) NOT NULL,
+	"amount" bigInt NOT NULL,
 	"date" varchar,
 	"category_id" bigint,
 	CONSTRAINT "transactions_pk" PRIMARY KEY ("_id")
@@ -20,7 +9,7 @@ CREATE TABLE public.transactions (
   OIDS=FALSE
 );
 
-CREATE TABLE public.categories (
+CREATE TABLE categories (
 	"_id" serial NOT NULL,
 	"category" varchar NOT NULL,
     CONSTRAINT "categories_pk" PRIMARY KEY ("_id")
@@ -28,22 +17,31 @@ CREATE TABLE public.categories (
     OIDS=FALSE
 );
 
+CREATE TABLE users (
+	"_id" serial NOT NULL,
+	"username" varchar UNIQUE NOT NULL,
+	"password" varchar NOT NULL,
+	CONSTRAINT "users_pk" PRIMARY KEY("_id")
+) WITH (
+	OIDS=FALSE
+);
 
-ALTER TABLE public.transactions ADD CONSTRAINT "transactions_fk0" FOREIGN KEY ("category_id") REFERENCES public.categories("_id")
+ALTER TABLE transactions ADD CONSTRAINT "transactions_fk0" FOREIGN KEY ("category_id") REFERENCES categories("_id");
+ALTER TABLE transactions ADD CONSTRAINT "transactions_fk1" FOREIGN KEY ("user_id") REFERENCES users("_id");
 
-INSERT INTO public.categories VALUES (1, 'test');
-INSERT INTO public.categories VALUES (2, 'Housing/Rent');
-INSERT INTO public.categories VALUES (3, 'Utilities');
-INSERT INTO public.categories VALUES (4, 'Gas');
-INSERT INTO public.categories VALUES (5, 'Groceries');
-INSERT INTO public.categories VALUES (6, 'Dining Out');
-INSERT INTO public.categories VALUES (7, 'Drinks');
-INSERT INTO public.categories VALUES (8, 'Entertainment');
-INSERT INTO public.categories VALUES (9, 'Savings');
-INSERT INTO public.categories VALUES (10, 'Other');
+INSERT INTO categories VALUES (1, 'test');
+INSERT INTO categories VALUES (2, 'Housing/Rent');
+INSERT INTO categories VALUES (3, 'Utilities');
+INSERT INTO categories VALUES (4, 'Gas');
+INSERT INTO categories VALUES (5, 'Groceries');
+INSERT INTO categories VALUES (6, 'Dining Out');
+INSERT INTO categories VALUES (7, 'Drinks');
+INSERT INTO categories VALUES (8, 'Entertainment');
+INSERT INTO categories VALUES (9, 'Savings');
+INSERT INTO categories VALUES (10, 'Other');
 
--- INSERT INTO public.transactions VALUES (999, 'idk', 123.45, '10/18/2021', 6);
+-- INSERT INTO transactions VALUES (999, 'idk', 123.45, '10/18/2021', 6);
 
 -- To Delete all transactions, uncomment delete and run command: 
--- DELETE FROM public.transactions
--- psql -d postgres://faojdvgu:rTPmS6Vk_r0HoleiSheciCMrXiQF409Y@fanny.db.elephantsql.com/faojdvgu -f transactions_postgres_create.sql
+-- DELETE FROM transactions
+-- psql -d postgres://qnvdfcpn:E0IDs55E1KoIP0bLva8N5nw5aEJZ3olj@kashin.db.elephantsql.com/qnvdfcpn -f transactions_postgres_create.sql
