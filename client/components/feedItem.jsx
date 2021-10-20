@@ -8,7 +8,6 @@ class FeedItem extends Component {
     render(){
       const rows = [];
       const transactions = this.props.state.transactions;
-      console.log("HELP WHY IS IT SO BROKEN", transactions);
       for (let i = 0; i < transactions.length; i++) {
         rows.push(
           <div key={i}>

@@ -17,9 +17,7 @@ class PieChart extends Component {
       for (const property in cache) {
         obj[property] = (cache[property]/total)*100;
       };
-      //not sure why this works, copy pasta
-      let whatWasState;
-      whatWasState = {
+      let whatWasState = {
         labels: ['Housing/Rent', 'Utilities', 'Gas', 'Groceries', 'Dining Out', 'Drinks', 'Entertainment', 'Savings', 'Other'],
           datasets: [{
             data: [obj['Housing/Rent'], obj['Utilities'], obj['Gas'], obj['Groceries'], obj['Dining Out'], obj['Drinks'], obj['Entertainment'], obj['Savings'], obj['Other']],

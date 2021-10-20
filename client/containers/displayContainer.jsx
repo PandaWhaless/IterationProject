@@ -12,7 +12,6 @@ class DisplayContainer extends Component {
     }
 
     render(){
-      console.log('please be working!!!', this.props.state.total);
       return (
         <div className = "displayContainer">
           <h3>October Spending:</h3>
