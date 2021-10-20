@@ -10,8 +10,8 @@ class MainContainer extends Component {
       super(props);
 
       this.state = {
-        transactions: [1,2,3],
-        total: 100
+        transactions: [],
+        total: 0
       };
 
       this.submit = this.submit.bind(this);
@@ -37,7 +37,6 @@ class MainContainer extends Component {
   };
 
   delete(t_id) {
-      // console.log('identiifcation', identification['_id'])
       fetch('/api/transactions', {
         method: 'DELETE',
         headers: {
@@ -75,15 +74,11 @@ class MainContainer extends Component {
         })
         .then(response => response.json())
         .then(data => {
-          // console.log(data);
-          // console.log(this.state);
           const transactions = data.data;
-          // // transactions.push(data);
           this.setState({
             transactions: transactions,
             total: data.total
           });
-          document.location.reload();
         })
         .catch(err => console.log(err));
       }

@@ -21,6 +21,8 @@ app.get('/', (req, res) => {
 //handle all requests for CRUD operations with transaction data
 app.use('/api/transactions', transactionRouter);
 
+//handle all requests for CRUD operations with user data
+app.use('/api/user', userRouter);
 
 // catch-all route handler for any requests to an unknown route
 app.use((req, res) => res.status(404).send('This is not the page you\'re looking for...'));

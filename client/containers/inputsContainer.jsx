@@ -11,7 +11,6 @@ class InputsContainer extends Component {
           <input type="text" className='input' id="transactionName" placeholder='Transaction'/>
           <input type="text" className='input' id="transactionAmt" placeholder='Amount'/>
           <select name="Category" className='input' id="category">
-            {/* <option value="1">test</option> */}
             <option value="1">Choose Category</option>
             <option value="2">Housing/Rent</option>
             <option value="3">Utilities</option>
