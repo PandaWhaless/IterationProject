@@ -4,10 +4,25 @@ import { Doughnut } from 'react-chartjs-2';
 class PieChart extends Component {
     constructor(props){
       super(props);
-      this.state = {
+    }
+
+    render(){
+      const cache = {};
+      for (let i = 0; i < this.props.transactions.length; i++){
+        if (!cache[this.props.transactions[i].category]) cache[this.props.transactions[i].category] = this.props.transactions[i].amount;
+        else cache[this.props.transactions[i].category] += this.props.transactions[i].amount;
+      }
+      const obj ={'Housing/Rent': 0, 'Utilities': 0, 'Gas': 0, 'Groceries': 0, 'Dining Out': 0,'Drinks': 0,  'Entertainment': 0, 'Savings': 0, 'Other': 0, };
+      const total = this.props.total;
+      for (const property in cache) {
+        obj[property] = (cache[property]/total)*100;
+      };
+      //not sure why this works, copy pasta
+      let whatWasState;
+      whatWasState = {
         labels: ['Housing/Rent', 'Utilities', 'Gas', 'Groceries', 'Dining Out', 'Drinks', 'Entertainment', 'Savings', 'Other'],
-        datasets: [
-          {
+          datasets: [{
+            data: [obj['Housing/Rent'], obj['Utilities'], obj['Gas'], obj['Groceries'], obj['Dining Out'], obj['Drinks'], obj['Entertainment'], obj['Savings'], obj['Other']],
             label: 'Rainfall',
             backgroundColor: [
               '#646FA9', //Housing
@@ -31,75 +46,20 @@ class PieChart extends Component {
               '#523C3F', //Savings
               '#54586D', //Other
             ],
-            data: [11, 11, 11, 11, 11, 11, 11, 11, 11],
-          }
-        ]
-      };
-    }
-
-    getData() {
-        fetch('/api/transactions')
-        .then (response => response.json())
-        .then(data => {
-          const cache = {};
-          for (let i = 0; i < data.data.length; i++){
-            if (!cache[data.data[i].category]) cache[data.data[i].category] = data.data[i].amount;
-            else cache[data.data[i].category] += data.data[i].amount;
-          }
-          const obj ={'Housing/Rent': 0, 'Utilities': 0, 'Gas': 0, 'Groceries': 0, 'Dining Out': 0,'Drinks': 0,  'Entertainment': 0, 'Savings': 0, 'Other': 0, };
-          const total = data.total;
-          for (const property in cache) {
-            obj[property] = (cache[property]/total)*100
-          };
-          this.setState({
-            labels: ['Housing/Rent', 'Utilities', 'Gas', 'Groceries', 'Dining Out', 'Drinks', 'Entertainment', 'Savings', 'Other'],
-            datasets: [{
-              data: [obj['Housing/Rent'], obj['Utilities'], obj['Gas'], obj['Groceries'], obj['Dining Out'], obj['Drinks'], obj['Entertainment'], obj['Savings'], obj['Other']],
-              label: 'Rainfall',
-              backgroundColor: [
-                '#646FA9', //Housing
-                '#49A9B4', //Utilities
-                '#6BCD69', //Gas
-                '#DBDCB8', //Groceries
-                '#CBA18C', //Dining Out
-                '#C4737C', //Drinks
-                '#AA8D90', //Entertainment
-                '#735558', //Savings
-                '#787D96', //Other
-              ],
-              hoverBackgroundColor: [
-                '#454E7D', //Housing
-                '#357A81', //Utilities
-                '#39A738', //Gas
-                '#B3B66A', //Groceries
-                '#A86B4C', //Dining Out
-                '#9D424C', //Drinks
-                '#805E62', //Entertainment
-                '#523C3F', //Savings
-                '#54586D', //Other
-              ],
-            }]
-          })
-          console.log(this.state.data)
-        })
-        .catch(err => console.log(err))
-    }
-
-    render(){
-      //not sure why this works, copy pasta
-      this.getData();
+          }]
+        }
 
       const plugins = [{
         beforeDraw: function(chart) {
-         var width = chart.width,
+         let width = chart.width,
              height = chart.height,
              ctx = chart.ctx;
              ctx.restore();
             //  var fontSize = (height / 160).toFixed(2);
-            var fontSize = '50px';
+            let fontSize = '50px';
              ctx.font = fontSize + "em sans-serif";
              ctx.textBaseline = "top";
-             var text = "",
+             let text = "",
              textX = Math.round((width - ctx.measureText(text).width) / 2),
              textY = height / 2;
              ctx.fillText(text, textX, textY);
@@ -112,7 +72,7 @@ class PieChart extends Component {
           <center>
           <h3>Total Spending</h3>
           <Doughnut
-            data={this.state}
+            data={whatWasState}
             options={{
               responsiveness: true,
               title:{

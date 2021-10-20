@@ -10,31 +10,53 @@ class MainContainer extends Component {
       super(props);
 
       this.state = {
-        transactions: [],
-        total: 0,
+        transactions: [1,2,3],
+        total: 100
       };
 
       this.submit = this.submit.bind(this);
-
+      this.delete = this.delete.bind(this);
     }
   
 
-  //change this to componentDidUpdate
-  // componentDidUpdate() {
-  //   fetch('http://localhost:8080/api/transactions')
-  //     .then( response => response.json())
-  //     .then( data => {
-  //       // console.log('received data', data);
-  //       this.setState({
-  //         transactions: data.data,
-  //         total: data.total
-  //       });
-  //       console.log(this.state);
-  //     })
-  //     .catch(err => {
-  //       console.log('error fetching transaction data', err);
-  //     })
-  // };
+  // change this to componentDidUpdate
+  componentDidMount() {
+    fetch('api/transactions')
+      .then( response => response.json())
+      .then( data => {
+        // console.log('received data', data);
+        this.setState({
+          transactions: data.data,
+          total: data.total
+        });
+        console.log('new state', this.state);
+      })
+      .catch(err => {
+        console.log('error fetching transaction data', err);
+      })
+  };
+
+  delete(t_id) {
+      // console.log('identiifcation', identification['_id'])
+      fetch('/api/transactions', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: t_id,
+        })
+      })
+      .then(data => data.json()) 
+      .then(res => {
+        this.setState({
+          transactions: res.data,
+          total: res.total
+        });
+      })// added set state to re-render
+      .catch(err => console.log(err));
+  };
+
 
     submit(){
       console.log('submit activated')
@@ -66,18 +88,18 @@ class MainContainer extends Component {
         .catch(err => console.log(err));
       }
       else{
+        alert('CHOOSE A FUCKING CATEGORY');
         console.log('submit was clicked while category was still "choose category"');
       }
     };
-
 
 
     render(){
       return (
         <div className = 'mainContainer'>
           <img src={logo} id="logo"/>
-          <InputsContainer state={this.state} submit={this.submit}/>
-          <DisplayContainer transactions={this.state.transactions} total={this.state.total} />
+          <InputsContainer submit={this.submit}/>
+          <DisplayContainer delete={this.delete} state={this.state}/>
         </div>
       )
     };

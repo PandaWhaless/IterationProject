@@ -33,8 +33,9 @@ router.post('/', transactionController.addTransaction, transactionController.get
 router.delete('/', 
     transactionController.deleteTransaction,
     transactionController.getTransaction,
+    transactionController.getTotal,
     (req, res) => {
-        return res.sendStatus(200)
+        return res.sendStatus(200).json({...res.locals})
 });
 
 

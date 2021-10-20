@@ -1,29 +1,26 @@
 import React, { Component } from 'react';
-import InputsDisplay from '../components/inputsDisplay.jsx';
+import FeedItem from "../components/feedItem.jsx";
 import TotalsDisplay from '../components/totalsDisplay.jsx';
 import PieChart from '../components/pieChart.jsx';
-import Total from '../components/total.jsx';
+import Total from '../components/Total.jsx';
 
 
 
 class DisplayContainer extends Component {
     constructor(props){
       super(props);
-      this.state = {
-        transactions: this.props.transactions,
-        total: this.props.total
-      };
     }
 
     render(){
+      console.log('please be working!!!', this.props.state.total);
       return (
         <div className = "displayContainer">
           <h3>October Spending:</h3>
-          <InputsDisplay transactions={this.state.transactions} total={this.state.total} />
-          <Total />
+          <FeedItem delete={this.props.delete} state={this.props.state}/>
+          <Total total = {this.props.state.total}/>
           <div id="chartContainer">
-            <TotalsDisplay total={this.state.total}/>
-            <PieChart />
+            <TotalsDisplay total={this.props.state.total}/>
+            <PieChart transactions={this.props.state.transactions} total={this.props.state.total}/>
           </div>
         </div>
       )
