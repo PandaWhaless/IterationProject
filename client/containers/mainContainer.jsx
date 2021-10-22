@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import InputsContainer from './inputsContainer.jsx';
 import DisplayContainer from './displayContainer.jsx';
-
-import logo from '../../Pockets-logo.png';
+import logo from '../../public/12.png';
 
 
 class MainContainer extends Component {
@@ -11,13 +10,16 @@ class MainContainer extends Component {
 
       this.state = {
         transactions: [],
-        total: 0
+        total: 0,
+        name: '',
       };
 
       this.submit = this.submit.bind(this);
       this.delete = this.delete.bind(this);
+      this.getName = this.getName.bind(this);
     }
   
+    
 
   // change this to componentDidUpdate
   componentDidMount() {
@@ -29,12 +31,13 @@ class MainContainer extends Component {
           transactions: data.data,
           total: data.total
         });
-        console.log('new state', this.state);
+        // console.log('new state', this.state);
       })
       .catch(err => {
         console.log('error fetching transaction data', err);
       })
   };
+
 
   delete(t_id) {
       fetch('/api/transactions', {
@@ -56,9 +59,16 @@ class MainContainer extends Component {
       .catch(err => console.log(err));
   };
 
-
-    submit(){
+    submit(dateVal){
       console.log('submit activated')
+      const dates = dateVal.toString().split(' ');
+      const month = dates[1];
+      const day = dates[2];
+      const year = dates[3];
+      const monthConverter = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12};
+      const dateString = monthConverter[month] + '/' + Number(day) + '/' + year;
+      console.log(dateString);
+      console.log('on change date val : ', month, day, year);
       if(document.getElementById('category').value !== "1"){
         fetch('/api/transactions', {
           method: 'POST',
@@ -68,7 +78,8 @@ class MainContainer extends Component {
           body: JSON.stringify({
             name: document.getElementById('transactionName').value,
             amount: document.getElementById('transactionAmt').value,
-            date: new Date().toLocaleDateString(),
+            date: dateString,
+            month: dates[1],
             category_id: document.getElementById('category').value
           })
         })
@@ -80,21 +91,36 @@ class MainContainer extends Component {
             total: data.total
           });
         })
+        .then(() => {
+          alert('Transaction added!');
+          document.getElementById('transactionName').value = null;
+          document.getElementById('transactionAmt').value = null;
+          document.getElementById('category').value = '1';
+        })
         .catch(err => console.log(err));
       }
       else{
-        alert('CHOOSE A FUCKING CATEGORY');
         console.log('submit was clicked while category was still "choose category"');
       }
     };
-
+// fetch for 'username's m
+    getName() {
+      fetch('/api/monthly')  
+        .then(res => res.json())
+        .then(resp => {
+          this.setState({
+            ...this.state,
+            name: resp})
+        })
+        .catch(err => console.log(err));
+    }
 
     render(){
       return (
         <div className = 'mainContainer'>
           <img src={logo} id="logo"/>
-          <InputsContainer submit={this.submit}/>
-          <DisplayContainer delete={this.delete} state={this.state}/>
+          <InputsContainer submit={this.submit} date={this.date}/>
+          <DisplayContainer delete={this.delete} state={this.state} getName={this.getName}/>
         </div>
       )
     };

@@ -3,20 +3,20 @@ const path = require('path');
 const app = express();
 const PORT = 3000; 
 const transactionRouter = require('./routes/transactions');
+const userRouter = require('./routes/user');
 
 /**
  * handle parsing request body
  */
- app.use(express.json());
- app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.resolve(__dirname, '../public')));
 
-
 //testing server
-app.get('/', (req, res) => {
-    console.log('Hello Patrick');
-  });
+// app.get('/', (req, res) => {
+//     console.log('Hello Patrick');
+//   });
 
 //handle all requests for CRUD operations with transaction data
 app.use('/api/transactions', transactionRouter);
@@ -24,10 +24,12 @@ app.use('/api/transactions', transactionRouter);
 //handle all requests for CRUD operations with user data
 app.use('/api/user', userRouter);
 
+//handle requests for username to show up on home page
+app.use('/api/monthly', userRouter);
+
 // catch-all route handler for any requests to an unknown route
 app.use((req, res) => res.status(404).send('This is not the page you\'re looking for...'));
-
-
+  
 //express error handler
 app.use((err, req, res, next) => {
   const defaultErr = {
@@ -45,5 +47,6 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`Server listening on port: ${PORT}`);
   });
-  
+
+
   module.exports = app;

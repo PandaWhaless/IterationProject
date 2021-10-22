@@ -6,26 +6,35 @@ class TotalsDisplay extends Component {
     }
 
     render(){
-      
+      let total = 0;
+      const transactions = this.props.transactions;
+      for (let i = 0; i < transactions.length; i++) {
+        if(transactions[i].month === this.props.month || this.props.month === 'All'){
+          // console.log(transactions[i].amount)
+          total += Number(transactions[i].amount);
+        }
+      }
       return (
         <div className = "totalsDisplay">
           <center>
             <div>
               Budget:
               <br></br>
-              $5000
+              ${this.props.state.budget}
             </div>
             <div>
               Total Spent:
               <br></br>
-              <center>${this.props.total}</center>
+              <center>${total}</center>
             </div>
             <div>
               Remaining:
               <br></br>
-              <center>${5000 - this.props.total}</center>
+              <center>${Number(this.props.state.budget) - total}</center>
             </div>
-            <button id="editButton">Edit Budget</button>
+            {/* <form id="editForm">p here</form> */}
+            <input type='text' className='input' id='budgetInput'/> 
+            <button id="editButton" onClick={()=>this.props.budget(document.getElementById('budgetInput').value)}>Edit Budget</button>
           </center>
         </div>
       )

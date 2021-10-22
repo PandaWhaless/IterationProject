@@ -3,7 +3,9 @@ CREATE TABLE transactions (
 	"name" varchar NOT NULL,
 	"amount" bigInt NOT NULL,
 	"date" varchar,
+	"month" varchar,
 	"category_id" bigint,
+	"user_id" bigInt NOT NULL,
 	CONSTRAINT "transactions_pk" PRIMARY KEY ("_id")
 ) WITH (
   OIDS=FALSE
@@ -44,4 +46,4 @@ INSERT INTO categories VALUES (10, 'Other');
 
 -- To Delete all transactions, uncomment delete and run command: 
 -- DELETE FROM transactions
--- psql -d postgres://qnvdfcpn:E0IDs55E1KoIP0bLva8N5nw5aEJZ3olj@kashin.db.elephantsql.com/qnvdfcpn -f transactions_postgres_create.sql
+-- psql -d postgres://snnafqst:xJGFpSb_qpridnJj6lBNO1W_k6MUIg5K@kashin.db.elephantsql.com/snnafqst -f transactions_postgres_create.sql

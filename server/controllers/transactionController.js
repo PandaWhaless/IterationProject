@@ -8,12 +8,13 @@ const transactionController = {};
 //MIDDLEWARE TO ADD A TRANSACTION TO DB
 transactionController.addTransaction = (req, res, next) => {
     //req.body is going to contain transaction name, amount, and category
-    const addTransQuery = `INSERT INTO public.transactions (name, amount, date, category_id) VALUES ($1, $2, $3, $4) RETURNING *`; 
-    const values = [req.body.name, req.body.amount, req.body.date, req.body.category_id]
+    // console.log('req.headers', req.headers.cookie.replace(/\D/g, ""))
+    // console.log(req.body);
+    const addTransQuery = `INSERT INTO public.transactions (name, amount, date, category_id, user_id, month) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`; 
+    const values = [req.body.name, req.body.amount, req.body.date, req.body.category_id, req.headers.cookie.replace(/\D/g, ""), req.body.month];
     // console.log(addTransQuery);
-    console.log('amount type: ', typeof req.body.amount);
+    // console.log('amount type: ', typeof req.body.amount);
     // console.log(values);
-
     db.query(addTransQuery, values)
         .then(data => {
             // console.log('rows:', data.rows);
@@ -27,13 +28,14 @@ transactionController.addTransaction = (req, res, next) => {
 };
 
 //MIDDLEWARE FOR RETRIEVING TRANSACTION DATA FOR FRONTEND DISPLAY
+// cookie and user id needs to match
 transactionController.getTransaction = (req, res, next) => {
     const getTransQuery = `SELECT transactions.*, categories.category as category 
     FROM transactions 
-    LEFT OUTER JOIN categories ON categories._id = transactions.category_id`;
-    db.query(getTransQuery)
+    LEFT OUTER JOIN categories ON categories._id = transactions.category_id WHERE user_id=$1`;
+    const values = [req.headers.cookie.replace(/\D/g, "")];
+    db.query(getTransQuery, values)
         .then(data => {
-            // console.log(data.rows);
             res.locals.data = data.rows;
             return next();
         })

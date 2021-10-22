@@ -9,8 +9,10 @@ class PieChart extends Component {
     render(){
       const cache = {};
       for (let i = 0; i < this.props.transactions.length; i++){
-        if (!cache[this.props.transactions[i].category]) cache[this.props.transactions[i].category] = this.props.transactions[i].amount;
-        else cache[this.props.transactions[i].category] += this.props.transactions[i].amount;
+        if(this.props.transactions[i].month === this.props.month || this.props.month === 'All'){
+          if (!cache[this.props.transactions[i].category]) cache[this.props.transactions[i].category] = this.props.transactions[i].amount;
+          else cache[this.props.transactions[i].category] += this.props.transactions[i].amount;
+        }
       }
       const obj ={'Housing/Rent': 0, 'Utilities': 0, 'Gas': 0, 'Groceries': 0, 'Dining Out': 0,'Drinks': 0,  'Entertainment': 0, 'Savings': 0, 'Other': 0, };
       const total = this.props.total;
